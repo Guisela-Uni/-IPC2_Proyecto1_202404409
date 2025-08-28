@@ -6,18 +6,18 @@ class InfoNodo(): #clase generica, que me permite heredar a clases hijas, estruc
         pass
 
 class Nodo: 
-    def __init__(self,info):
-        self.info = info
+    def __init__(self,dato):
+        self.dato = dato
         self.siguiente = None
 
     def obtenerDato(self):
-        return self.info
+        return self.dato
 
     def obtenerSiguiente(self):
         return self.siguiente
 
-    def asignarDato(self,info):
-        self.info = info
+    def asignarDato(self,dato):
+        self.info = dato
 
     def asignarSiguiente(self,nuevosiguiente):
         self.siguiente = nuevosiguiente
@@ -27,14 +27,29 @@ class ListaSimple:
 
     def __init__(self): 
         self.primero = None
+        self.tamano = 0
 
     def estaVacia(self):
         return self.primero == None
 
     def agregar(self,item): 
         nuevo = Nodo(item)
-        nuevo.asignarSiguiente(self.primero)
-        self.primero = nuevo 
+        if self.primero is None:
+            self.primero = nuevo
+        else:
+            actual = self.primero
+            while actual.asignarSiguiente:
+                actual = actual.siguiente
+            actual.siguiente = nuevo
+        self.tamano +=1
+    
+    def obtener(self, indice):
+        if indice < 0 or indice >= self.longitud:
+            return None
+        actual = self.primero
+        for i in range(indice):
+            actual = actual.siguiente
+        return actual.dato
 
     def tamano(self):
         actual = self.primero
@@ -50,16 +65,16 @@ class ListaSimple:
             actual.obtenerDato().desplegar() 
             actual = actual.obtenerSiguiente() 
 
-    def buscar(self,item):
+    def buscar(self,idBuscar):
+        # Busca el índice de un elemento por su id
         actual = self.primero
-        encontrado = False
-        while actual != None and not encontrado:
-            if actual.obtenerDato().EsIgualALLave(item):
-                encontrado = True
-            else:
-                actual = actual.obtenerSiguiente()
-
-        return encontrado
+        indice = 0
+        while actual:
+            if hasattr(actual.dato, 'id') and actual.dato.id == idBuscar:
+                return indice
+            actual = actual.siguiente
+            indice += 1
+        return -1
 
     def eliminar(self,item):
         actual = self.primero
