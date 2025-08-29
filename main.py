@@ -1,5 +1,9 @@
+from model.CampoAgricola import Campo
+from model.matriz import matriz
+from model.SistemaOptimizacion import SistemaAgricola
 import os
-#funciones = FuncionesCampo()
+
+sistema = SistemaAgricola
 
 def MenuPrincipal():
     print("------- Optimizador de sistemas de agricultura de precisión ---------")
@@ -35,11 +39,13 @@ while True:
         ruta = input("Ingrese la ruta del archivo: ")
         nombreArchivo = input("Ingrese el nombre del archivo: ")
         archivo = ruta + "/" + nombreArchivo if ruta else nombreArchivo
-        funciones.cargar_archivo(archivo)
+        sistema.Cargar_Archivo(archivo)
 
     elif opcion == "2":
-        os.system('cls') 
-        print("Ha seleccionado la opción 2")
+        print("\nMostrar matrices:")
+        sistema.listar_campos()
+        IDcampo = input("Ingrese el ID del campo: ")
+        sistema.mostrar_campo(IDcampo)
         
 
     elif opcion == "3":
@@ -54,8 +60,27 @@ while True:
         
     
     elif opcion == "5":
-        os.system('cls')
-        print("Ha seleccionado la opción 5")
+        print("\nGraficar matrices con Graphviz:")
+        sistema.listar_campos()
+        IDcampo = input("Ingrese el ID del campo: ")
+
+        # Buscar el campo y graficar
+        actual = sistema.campos.primero
+        encontrado = False
+        while actual:
+            Campo = actual.dato
+            if Campo.id == IDcampo:
+                Campo.matriz_suelo .generar_graphviz_tabla(
+                    f"Matriz de Suelo - Campo {Campo.id}",
+                    Campo.estacionBase,
+                    Campo.sensores_suelo,
+                    f"matriz_suelo_tabla_campo_{Campo.id}"
+                )
+                encontrado = True
+                break
+            actual = actual.siguiente
+        if not encontrado:
+            print(f"Campo {IDcampo} no encontrado")
         
 
     elif opcion == "6":
